@@ -40,6 +40,8 @@ def validate(text):
         return "leading or trailing white space"
     if "\n" in text or "\r" in text:
         return "more than one line"
+    if any(ord(ch) < 0x20 for ch in text):
+        return "control character"
     try:
         text.encode("utf-8")
     except UnicodeEncodeError:
@@ -70,6 +72,7 @@ def self_test():
         ("z" * 201, False),
         ("two\nlines", False),
         ("carriage\rreturn", False),
+        ("bell\x07sound", False),
         (" leading", False),
         ("trailing ", False),
         ("\ttabbed", False),
